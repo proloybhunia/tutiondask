@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>TuitionDesk</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0f766e"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);--bg:#f4f6f5;--card:#fff;--tx:#14231f;--mut:#667a74;--pri:#0f766e;--prit:#fff;--bd:#dfe7e4;--red:#c2410c;--redb:#ffedd5;--grn:#15803d;--grnb:#dcfce7}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1614;--card:#17221f;--tx:#e8f1ee;--mut:#97aaa4;--pri:#2dd4bf;--prit:#04201c;--bd:#26352f;--red:#fdba74;--redb:#3a1f0c;--grn:#86efac;--grnb:#0f2e1a}}
+:root[data-theme="dark"]{--bg:#0e1614;--card:#17221f;--tx:#e8f1ee;--mut:#97aaa4;--pri:#2dd4bf;--prit:#04201c;--bd:#26352f;--red:#fdba74;--redb:#3a1f0c;--grn:#86efac;--grnb:#0f2e1a}
+*{box-sizing:border-box;-webkit-touch-callout:none}html,body{margin:0;height:100%}body{-webkit-user-select:none;user-select:none}input,select{-webkit-user-select:text;user-select:text}
+body{background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;max-width:520px;margin:auto}
+header{padding:14px 16px 8px;display:flex;justify-content:space-between;align-items:baseline}
+header b{font-size:20px}header span{color:var(--mut);font-size:13px}
+main{flex:1;overflow-y:auto;padding:4px 14px 16px}
+nav{display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border:0;border-bottom:4px solid transparent;background:none;color:var(--mut);padding:8px 0 5px;font-size:11px;font-family:inherit}
+nav button i{display:block;font-style:normal;font-size:20px}nav button.on{color:var(--pri);font-weight:700;border-bottom-color:var(--pri);background:color-mix(in srgb,var(--pri) 15%,transparent);border-radius:10px 10px 0 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;margin:10px 0}
+h3{margin:14px 2px 4px;font-size:13px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid var(--bd)}
+.row:last-child{border:0}.sub{color:var(--mut);font-size:13px}
+.btn{width:100%;border:0;border-radius:12px;background:var(--pri);color:var(--prit);font:600 16px inherit;font-family:inherit;padding:14px;margin:6px 0}
+.btn.ghost{background:none;color:var(--pri);border:1.5px solid var(--pri)}
+.chip{border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;background:var(--redb);color:var(--red);white-space:nowrap}
+.chip.g{background:var(--grnb);color:var(--grn)}
+.big{font-size:30px;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid .card{margin:0}
+.pa{display:flex;gap:6px}.pa button{width:44px;height:40px;border-radius:10px;border:1.5px solid var(--bd);background:none;color:var(--mut);font:700 15px inherit;font-family:inherit}
+.pa .p.on{background:var(--grn);color:#fff;border-color:var(--grn)}.pa .a.on{background:#c2410c;color:#fff;border-color:#c2410c}
+select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit;margin:6px 0}
+.bar{height:10px;border-radius:6px;background:var(--bd);overflow:hidden}.bar i{display:block;height:100%;background:var(--pri)}
+.in{width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit;margin:4px 0}
+.dbtn{padding:9px 12px;margin:3px;border-radius:10px;border:1.5px solid var(--bd);background:none;color:var(--mut);font:600 14px inherit;font-family:inherit}.dbtn.on{background:var(--pri);color:var(--prit);border-color:var(--pri)}
+.ic{border:0;background:var(--grnb);color:var(--grn);border-radius:10px;padding:7px 10px;font-weight:600;font-family:inherit}
+#toast{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#14231f;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;max-width:88%;text-align:center;opacity:0;transition:.25s;pointer-events:none}
+#toast.s{opacity:1}
+
+.card{box-shadow:0 1px 2px rgba(0,0,0,.05),0 6px 16px rgba(0,0,0,.05);border-radius:16px}
+.btn{box-shadow:0 2px 8px rgba(0,0,0,.18);transition:transform .12s ease,box-shadow .12s ease,opacity .12s ease}
+.btn.ghost{box-shadow:none}
+.btn:active,.ic:active,.dbtn:active,.pa button:active{transform:scale(.97);opacity:.9}
+nav{box-shadow:0 -2px 12px rgba(0,0,0,.08)}
+nav button{transition:background .2s ease,color .2s ease;border-radius:12px 12px 0 0}
+nav button.on i{transform:scale(1.15)}
+nav button i{transition:transform .2s ease}
+input:focus,select:focus{outline:2px solid var(--pri);outline-offset:1px}
+.chip{letter-spacing:.2px}
+header b{letter-spacing:.3px}
+.big{letter-spacing:-.5px}
+.bar i{transition:width .4s ease}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.av{width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;flex:none}
+</style></head><body>
+<header><b><img id="lg" alt="" style="display:none;width:28px;height:28px;border-radius:8px;object-fit:cover;vertical-align:middle;margin-right:8px"><span id="at">TuitionDesk</span></b><span id="cn">Sunrise Tuition Centre</span></header>
+<main id="m"></main>
+<nav id="n"></nav><div id="toast"></div><div id="sh" style="display:none"></div>
+<script>
+var S=[];
+var HW=[];
+var EQ=[];
+var tabs=[["Fees","💰"],["Attendance","✅"],["Parent","👪"],["Owner","📊"]];
+var tab=0,sel=0,remSent=false,saved=false,mk=S.map(function(){return"P"}),cfg={name:"Sunrise Tuition Centre",upi:""},today=new Date().toDateString();
+try{var D=JSON.parse(localStorage.getItem("td1")||"null");if(D){S=D.S;cfg=D.cfg;mk=D.d==today?D.mk:S.map(function(){return"P"});if(D.EQ)EQ=D.EQ;if(D.H)H=D.H;if(D.HW2)HWL=D.HW2;if(D.PL)PL=D.PL;}}catch(e){}
+var DB=null,lastJ="";
+function sv(){var j=JSON.stringify({S:S,mk:mk,cfg:cfg,EQ:EQ,H:H,HW2:HWL,PL:PL,d:today});try{localStorage.setItem("td1",j)}catch(e){}if(DB&&j!==lastJ){lastJ=j;DB.doc("centre/main").set({json:j}).catch(function(){})}}
+function initDb(){try{claude.use("db").then(function(d){if(!d)return;DB=d;d.doc("centre/main").onSnapshot(function(s){var x=s.exists&&s.data();if(!x||!x.json){lastJ="";go();return}if(x.json===lastJ)return;try{var o=JSON.parse(x.json);S=o.S;cfg=o.cfg;if(o.EQ)EQ=o.EQ;if(o.H)H=o.H;if(o.HW2)HWL=o.HW2;if(o.PL)PL=o.PL;mk=o.d==today?o.mk:S.map(function(){return"P"});lastJ=x.json;go()}catch(e){}},function(){})}).catch(function(){})}catch(e){}}
+function g(i){return document.getElementById(i)}
+var eb=false,cur=0,eid=0;
+function bt(id){return cfg.bt.filter(function(b){return b.id==id})[0]}
+function mig(){if(!cfg.bt||!cfg.bt.length)cfg.bt=[{id:1,name:cfg.batch||"Class 9 · Evening batch",time:cfg.time||"4:00 PM",fee:cfg.mf||3000}];S.forEach(function(s){if(!s.b)s.b=cfg.bt[0].id});if(!cur||!bt(cur))cur=cfg.bt[0].id}
+function saveAtt2(){saved=true;toast("Attendance saved");go()}
+function absMsg(i){return"Dear Parent, "+S[i].n+" was absent today ("+new Date().toLocaleDateString("en-IN",{day:"numeric",month:"short"})+") from "+bt(S[i].b).name+" at "+cfg.name+". Please let us know the reason. Thank you."}
+function saveBt(){var n=g("bnm").value.trim(),t=g("btm").value.trim()||"-",f=+g("bfe").value.replace(/\D/g,"")||0;if(!n){toast("Enter batch name");return}var e=bt(eid);if(e){e.name=n;e.time=t;e.fee=f}else{var id=Date.now()%1000000000;cfg.bt.push({id:id,name:n,time:t,fee:f});cur=id}eid=0;toast("Batch saved");go()}
+function delB(id){if(S.some(function(s){return s.b==id})){toast("Remove its students first");return}if(cfg.bt.length<2){toast("Keep at least one batch");return}cfg.bt=cfg.bt.filter(function(b){return b.id!=id});go()}
+function delSt(i){S.splice(i,1);mk.splice(i,1);toast("Student removed");go()}
+function bcard(){var e=bt(eid)||{name:"",time:"",fee:""};return'<h3>Batches</h3><div class="card">'+cfg.bt.map(function(x){var n=S.filter(function(s){return s.b==x.id}).length;return'<div class="row"><div><b>'+x.name+'</b><div class="sub">'+x.time+' · '+inr(x.fee)+'/month · '+n+' students</div></div><div><button class="ic" onclick="eid='+x.id+';go()">Edit</button> <button class="ic" onclick="delB('+x.id+')">Remove</button></div></div>'}).join("")+'</div><div class="card"><b>'+(eid?"Edit batch":"Add batch")+'</b><input id="bnm" class="in" placeholder="Batch name, e.g. Class 10 Science" value="'+e.name.replace(/"/g,"&quot;")+'"><input id="btm" class="in" placeholder="Time, e.g. 5:30 PM" value="'+String(e.time).replace(/"/g,"&quot;")+'"><input id="bfe" class="in" type="text" inputmode="numeric" placeholder="Monthly fee for this batch" value="'+(e.fee||"")+'"><button class="btn" onclick="saveBt()">'+(eid?"Save changes":"Add batch")+'</button>'+(eid?'<button class="btn ghost" onclick="eid=0;go()">Cancel</button>':'')+'</div>'}
+function stList(){return'<h3>Students</h3><div class="card">'+(S.length?S.map(function(s,i){return'<div class="row"><div><b>'+s.n+'</b><div class="sub">'+(bt(s.b)?bt(s.b).name:"")+' · '+inr(s.mf||(bt(s.b)&&bt(s.b).fee)||cfg.mf||3000)+'/month</div></div><button class="ic" onclick="delSt('+i+')">Remove</button></div>'}).join(""):'<div class="sub">No students yet</div>')+'</div>'}
+function att2(){var b=bt(cur),idx=[];S.forEach(function(s,i){if(s.b==cur)idx.push(i)});var ab=idx.filter(function(i){return mk[i]=="A"}),d=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"short"});return'<select onchange="cur=+this.value;saved=false;go()">'+cfg.bt.map(function(x){return'<option value="'+x.id+'"'+(x.id==cur?" selected":"")+'>'+x.name+'</option>'}).join("")+'</select><div class="card"><b>'+b.name+'</b><div class="sub">'+d+' · '+b.time+'</div><div class="sub" style="margin-top:4px">Present '+(idx.length-ab.length)+' · Absent '+ab.length+'</div></div><div class="card">'+(idx.length?idx.map(function(i){return'<div class="row"><div>'+S[i].n+'</div><div class="pa"><button class="p'+(mk[i]=="P"?" on":"")+'" onclick="setM('+i+',\'P\')">P</button><button class="a'+(mk[i]=="A"?" on":"")+'" onclick="setM('+i+',\'A\')">A</button></div></div>'}).join(""):'<div class="sub">No students in this batch yet. Add them in the Owner tab.</div>')+'</div><button class="btn" onclick="saveAtt2()">Save attendance</button>'+(saved?'<div class="card"><div class="sub">Absent today. Tap WhatsApp to inform the parent:</div>'+(ab.length?ab.map(function(i){return'<div class="row"><span>'+S[i].n+'</span><button class="ic" onclick="sheet('+i+',2)">WhatsApp</button></div>'}).join(""):'<div style="padding:6px 0">No absentees today 🎉</div>')+'</div>':'')}
+function saveB(){cfg.batch=g("bn").value.trim()||cfg.batch;cfg.time=g("bt").value.trim()||cfg.time;eb=false;toast("Batch saved");go()}
+function delEq(k){EQ.splice(k,1);go()}
+function addEq(){var n=g("en").value.trim(),c=g("ec").value.trim()||"Class not given",r=g("er").value.trim();if(!n){toast("Enter the student name");return}EQ.unshift([n,c,r?"Referred by "+r:"Other enquiry"]);toast("Enquiry added");go()}
+function eqForm(){return'<h3>Add enquiry</h3><div class="card"><input id="en" class="in" placeholder="Student name"><input id="ec" class="in" placeholder="Class, e.g. Class 8"><input id="er" class="in" placeholder="Referred by (optional)"><button class="btn" onclick="addEq()">Add enquiry</button></div>'}
+function gf(){var e=g("ns");if(e){e.scrollIntoView({block:"center"});e.focus()}}
+function paid(i){S[i].pend=0;S[i].late=0;toast(S[i].n+" marked paid");go()}
+function setDue(){var v=g("fa").value.replace(/\D/g,""),d=+g("fl").value.replace(/\D/g,"")||0;if(!S.length||!v||+v<=0){toast("Enter the fee amount");return}S[sel].pend=+v;S[sel].late=d;toast("Fee due set for "+S[sel].n);go()}
+function addSc(){var v=g("ns").value;if(v===""||isNaN(+v)||+v<0||+v>100){toast("Enter a score from 0 to 100");return}S[sel].sc.push(+v);S[sel].sc.shift();toast("Score added");go()}
+function saveCfg(){cfg.title=g("ctl").value.trim()||"TuitionDesk";cfg.name=g("cnm").value.trim()||cfg.name;cfg.upi=g("cup").value.trim();cfg.mf=+g("cmf").value.replace(/\D/g,"")||cfg.mf||3000;toast("Settings saved");go()}
+function addSt(){var n=g("an").value.trim(),p=g("ap").value.replace(/\D/g,""),f=+g("af").value||0;p=p.replace(/^0+/,"");if(p.length==10)p="91"+p;if(!n||p.length<12){toast("Enter name and 10-digit mobile number");return}S.push({n:n,c:"Class 9",p:p,pend:f,late:f?1:0,att:100,b:+g("ab").value,mf:+g("am").value.replace(/\D/g,"")||(bt(+g("ab").value)||{}).fee||cfg.mf||3000,sc:[0,0,0,0,0,0]});mk.push("P");toast(n+" added");go()}
+function clearS(){if(!confirm("Remove ALL students and their data? This cannot be undone."))return;S=[];mk=[];sel=0;toast("All students removed");go()}
+function setup(){var f='padding:11px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit;width:100%;margin:4px 0',q=cfg.name.replace(/"/g,"&quot;"),u=cfg.upi.replace(/"/g,"&quot;");return'<h3>Centre settings</h3><div class="card"><input id="ctl" style="'+f+'" placeholder="App name shown at top" value="'+(cfg.title||"TuitionDesk").replace(/"/g,"&quot;")+'"><input id="cnm" style="'+f+'" placeholder="Centre name" value="'+q+'"><input id="cup" style="'+f+'" placeholder="UPI ID for fees" value="'+u+'"><input id="cmf" type="number" style="'+f+'" placeholder="Default monthly fee per student" value="'+(cfg.mf||3000)+'"><button class="btn ghost" onclick="saveCfg()">Save settings</button></div><h3>Centre logo</h3><div class="card"><input type="file" accept="image/*" onchange="setLogo(this)" class="in"><button class="btn ghost" onclick="rmLogo()">Remove logo</button></div><h3>Add student</h3><div class="card"><div class="sub">Tap the batches this student attends</div><div id="sbs">'+cfg.bt.map(function(x){return'<button class="dbtn" id="sb'+x.id+'" onclick="tgb('+x.id+')">'+x.name+'</button>'}).join("")+'</div><input id="an" style="'+f+'" placeholder="Student name"><input id="ap" type="tel" style="'+f+'" placeholder="Parent WhatsApp number (10 digits)"><input id="af" type="number" style="'+f+'" placeholder="Pending fee in rupees, 0 if paid"><input id="am" type="number" style="'+f+'" placeholder="Monthly fee (leave blank to use batch fee)"><button class="btn" onclick="addSt()">Add student</button><button class="btn ghost" onclick="clearS()">Remove all students (start fresh)</button></div>'}
+var inr=function(x){return"₹"+x.toLocaleString("en-IN")};
+function wl(p,t){return"https://wa.me/"+p+"?text="+encodeURIComponent(t)}
+function shut(){g("sh").style.display="none"}
+function cn2(){var e=document.createElement("textarea");e.value="+"+window.lp;e.style.position="fixed";e.style.opacity="0";document.body.appendChild(e);e.focus();e.select();var ok=false;try{ok=document.execCommand("copy")}catch(x){}document.body.removeChild(e);toast(ok?"Number copied":"Number: +"+window.lp)}
+function cp(){var e=g("mt");e.focus();e.select();e.setSelectionRange(0,99999);var ok=false;try{ok=document.execCommand("copy")}catch(x){}toast(ok?"Copied. Now paste it in WhatsApp":"Press and hold the text, then tap Copy")}
+function sheet(i,k){var s=S[i],t=k==2?absMsg(i):k?reportMsg():msgFee(s),h=g("sh"),lp0=(window.lp=s.p),b=t.replace(/&/g,"&amp;").replace(/</g,"&lt;"),bs="display:block;text-align:center;text-decoration:none";h.style.display="block";h.innerHTML='<div style="position:fixed;inset:0;background:rgba(0,0,0,.45)" onclick="shut()"></div><div class="card" style="position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));margin:0;max-height:85%;overflow:auto"><b>Send to '+s.n+'’s parent</b><div class="sub">WhatsApp number: +'+s.p+'</div><textarea id="mt" readonly style="width:100%;height:110px;margin:8px 0;padding:8px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit;-webkit-user-select:text;user-select:text">'+b+'</textarea><a class="btn" style="'+bs+'" href="'+wl(s.p,t)+'" target="_blank" rel="noopener">Open WhatsApp</a><button class="btn ghost" onclick="cp()">Copy message</button><button class="btn ghost" onclick="cn2()">Copy number</button><button class="btn ghost" onclick="shut()">Close</button></div>'}
+function reportMsg(){var s=S[sel];return"*Weekly Test Report* – "+cfg.name+"\nStudent: "+s.n+"\nScore: "+s.sc[5]+"/100\nClass rank: "+rank(sel)+" of "+S.length+"\nLast 6 tests: "+s.sc.join(", ")}
+function wa(p,t){window.open("https://wa.me/"+p+"?text="+encodeURIComponent(t),"_blank")}
+function toast(t){var e=document.getElementById("toast");e.textContent=t;e.className="s";setTimeout(function(){e.className=""},2600)}
+function picker(){return'<select onchange="sel=+this.value;go()">'+S.map(function(s,i){return'<option value="'+i+'"'+(i==sel?" selected":"")+'>'+s.n+(bn(s)?" · "+bn(s):"")+'</option>'}).join("")+"</select>"}
+function rank(i){var o=S.map(function(s,j){return[s.sc[5],j]}).sort(function(a,b){return b[0]-a[0]});for(var k=0;k<o.length;k++)if(o[k][1]==i)return k+1}
+function pendList(){return S.filter(function(s){return s.pend>0}).sort(function(a,b){return b.late-a.late})}
+function fees(){var l=pendList(),t=l.reduce(function(a,s){return a+s.pend},0);
+return'<div class="card"><div class="sub">Total pending</div><div class="big">'+inr(t)+'</div><div class="sub">'+l.length+' students</div></div>'+
+'<h3>Set fee due</h3><div class="card">'+(S.length?picker()+'<input id="fa" class="in" type="text" inputmode="numeric" placeholder="Fee due in rupees, e.g. 1500"><input id="fl" class="in" type="text" inputmode="numeric" placeholder="Days late (optional)"><button class="btn" onclick="setDue()">Set fee due</button><button class="btn ghost" onclick="recPay()">Record payment received (uses amount above)</button>':'<div class="sub">Add students in the Owner tab first.</div>')+'</div>'+
+'<div class="card">'+l.map(function(s){var i=S.indexOf(s);return'<div class="row"><div><b>'+s.n+'</b><div class="sub">'+(bn(s)?bn(s)+' · ':'')+inr(s.pend)+' pending</div></div><div style="text-align:right"><span class="chip">'+(s.late?s.late+' days late':'Due now')+'</span><div style="margin-top:6px"><button class="ic" onclick="sheet('+i+',0)">WhatsApp</button> <button class="ic" onclick="paid('+i+')">Paid ✓</button> <button class="ic" onclick="clearDue('+i+')">Remove due</button></div></div></div>'}).join("")+(l.length?"":"<div class=\"sub\" style=\"padding:8px 0\">No pending fees 🎉</div>")+"</div>"}
+function msgFee(s){var u=(cfg.upi||"").trim(),ul=(u&&u!=="sunrisetuition@upi")?" You can pay by UPI to "+u+".":"";return"Dear Parent, fee of "+inr(s.pend)+" for "+s.n+" is pending"+(s.late>0?" for "+s.late+" days":"")+" at "+cfg.name+"."+ul+" Kindly pay at the earliest. Thank you."}
+function remOne(i){wa(S[i].p,msgFee(S[i]))}
+function remAll(){}
+function remindAll(){toast("Tap WhatsApp next to each parent to send");var e=document.querySelector(".ic");if(e)e.scrollIntoView({block:"center"})}
+function att(){var a=mk.filter(function(x){return x=="A"}).length,d=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"short"});
+return'<div class="card"><div class="row" style="border:0;padding:0"><b>'+(cfg.batch||"Class 9 · Evening batch")+'</b><button class="ic" onclick="eb=!eb;go()">'+(eb?"Close":"Edit")+'</button></div><div class="sub">'+d+' · '+(cfg.time||"4:00 PM")+'</div>'+(eb?'<input id="bn" class="in" placeholder="Batch name, e.g. Class 10 Maths" value="'+(cfg.batch||"Class 9 · Evening batch").replace(/"/g,"&quot;")+'"><input id="bt" class="in" placeholder="Time, e.g. 5:30 PM" value="'+(cfg.time||"4:00 PM").replace(/"/g,"&quot;")+'"><button class="btn" onclick="saveB()">Save batch</button>':'')+'<div class="sub" style="margin-top:4px">Present '+(S.length-a)+' · Absent '+a+'</div></div><div class="card">'+
+S.map(function(s,i){return'<div class="row"><div>'+s.n+'</div><div class="pa"><button class="p'+(mk[i]=="P"?" on":"")+'" onclick="setM('+i+',\'P\')">P</button><button class="a'+(mk[i]=="A"?" on":"")+'" onclick="setM('+i+',\'A\')">A</button></div></div>'}).join("")+"</div>"+
+'<button class="btn" onclick="saveAtt()">Save &amp; send absent alerts</button>'+(saved?'<div class="card"><div class="sub">Alerts sent:</div>'+S.filter(function(s,i){return mk[i]=="A"}).map(function(s){return'<div class="row"><span>'+s.n+"’s parent</span><span class=\"chip g\">Sent ✓</span></div>"}).join("")+(a?"":'<div>No absentees today 🎉</div>')+"</div>":"")}
+function setM(i,v){mk[i]=v;saved=false;go()}
+function saveAtt(){saved=true;var a=mk.filter(function(x){return x=="A"}).length;toast(a?"Absent alert sent to "+a+" parents":"Attendance saved. No absentees");go()}
+function tests(){var s=S[sel],sc=s.sc,W=320,H=170,bw=34,g=(W-6*bw)/7,o='';
+sc.forEach(function(v,i){var h=v/100*130,x=g+i*(bw+g);o+='<rect x="'+x+'" y="'+(150-h)+'" width="'+bw+'" height="'+h+'" rx="6" fill="var(--pri)" opacity="'+(i==5?1:.55)+'"/><text x="'+(x+bw/2)+'" y="'+(144-h)+'" font-size="11" text-anchor="middle" fill="var(--tx)">'+v+'</text><text x="'+(x+bw/2)+'" y="165" font-size="10" text-anchor="middle" fill="var(--mut)">T'+(i+1)+'</text>'});
+var d=sc[5]-sc[4];
+return picker()+'<div class="grid"><div class="card" onclick="gf()"><div class="sub">This week · tap to enter</div><div class="big">'+sc[5]+'/100</div></div><div class="card"><div class="sub">Class rank</div><div class="big">#'+rank(sel)+'<span class="sub"> of '+S.length+'</span></div></div></div><div class="card"><div class="sub">Last 6 weekly tests '+(d>=0?'<span class="chip g">+':'<span class="chip">')+d+' vs last week</span></div><svg viewBox="0 0 '+W+' '+H+'" width="100%" style="margin-top:8px">'+o+'</svg></div><div class="card"><div class="sub">Add this week’s score</div><div style="display:flex;gap:8px;margin-top:6px"><input id="ns" type="text" inputmode="numeric" maxlength="3" placeholder="0 to 100" style="flex:1;padding:11px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit"><button class="ic" onclick="addSc()">Add</button></div></div><button class="btn" onclick="sheet(sel,1)">Share report on WhatsApp</button>'}
+function shareT(){var s=S[sel];wa(s.p,"*Weekly Test Report* – "+cfg.name+"\nStudent: "+s.n+"\nScore: "+s.sc[5]+"/100\nClass rank: "+rank(sel)+" of "+S.length+"\nLast 6 tests: "+s.sc.join(", "))}
+function parent(){var s=S[sel],c=s.att>=90?"g":"";
+return picker()+'<div class="card"><div class="sub">Attendance this month</div><div class="big">'+s.att+'%</div><div class="bar"><i style="width:'+s.att+'%"></i></div></div>'+
+'<h3>Homework</h3><div class="card">'+HW.map(function(h){return'<div class="row">'+h+"</div>"}).join("")+"</div>"+
+'<h3>Fee</h3><div class="card">'+(s.pend?'<div class="sub">Fee due</div><div class="big">'+inr(s.pend)+'</div><div class="sub">'+s.late+' days overdue</div><button class="btn" onclick="upi()">Pay by UPI</button>':'<span class="chip g">All fees paid ✓</span>')+"</div>"}
+function upi(){var s=S[sel];if(!cfg.upi){toast("Add your UPI ID in the Owner tab first");return}window.open("upi://pay?pa="+encodeURIComponent(cfg.upi)+"&pn="+encodeURIComponent(cfg.name)+"&am="+s.pend+"&cu=INR&tn="+encodeURIComponent("Fees "+s.n),"_blank")}
+function owner(){var t=S.reduce(function(a,s){return a+sfee(s)},0),p=S.reduce(function(a,s){return a+s.pend},0),c=Math.max(t-p,0),pc=Math.round(c/(t||1)*100);
+return'<div class="card"><div class="sub">October fees</div><div class="row" style="border:0"><div><div class="sub">Collected</div><div class="big" style="color:var(--grn)">'+inr(c)+'</div></div><div style="text-align:right"><div class="sub">Pending</div><div class="big" style="color:var(--red)">'+inr(p)+'</div></div></div><div class="bar"><i style="width:'+pc+'%"></i></div><div class="sub" style="margin-top:4px">'+pc+'% collected</div></div>'+
+'<div class="grid"><div class="card"><div class="sub">Students</div><div class="big">'+S.length+'</div></div><div class="card"><div class="sub">New enquiries</div><div class="big">'+EQ.length+'</div></div></div>'+
+'<h3>New referral enquiries</h3><div class="card">'+EQ.map(function(e,k){return'<div class="row"><div><b>'+e[0]+'</b><div class="sub">'+e[1]+" · "+e[2]+'</div></div><button class="ic" onclick="delEq('+k+')">Remove</button></div>'}).join("")+(EQ.length?"":"<div class=\"sub\" style=\"padding:8px 0\">No enquiries yet</div>")+"</div>"+eqForm()+bcard()+stList()+setup()}
+function go(){var m=document.getElementById("m");mig();sv();g("at").textContent=cfg.title||"TuitionDesk";var L=g("lg");if(cfg.logo){L.src=cfg.logo;L.style.display="inline-block"}else L.style.display="none";g("cn").textContent=cfg.name+(DB?" · 🟢 Shared":"");sel=Math.min(sel,Math.max(S.length-1,0));m.innerHTML=(!S.length&&tab==2)?'<div class="card">Add students in the Owner tab first.</div>':[fees,att2,parent,owner][tab]();
+document.getElementById("n").innerHTML=tabs.map(function(t,i){return'<button class="'+(i==tab?"on":"")+'" onclick="tab='+i+';go();document.getElementById(\'m\').scrollTop=0"><i>'+t[1]+"</i>"+t[0]+"</button>"}).join("")}
+var DN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function inB(s,id){return s.bs.indexOf(id)>=0}
+function bn(s){return s.bs.map(function(id){return bt(id)?bt(id).name:""}).join(" + ")}
+function sfee(s){return s.mf||s.bs.reduce(function(a,id){return a+(bt(id)?+bt(id).fee||0:0)},0)||cfg.mf||3000}
+function sched(b){return Object.keys(b.days).sort().map(function(d){return DN[d]+" "+b.days[d]}).join(", ")||"No days set"}
+function tg(d){var b=g("dd"+d),on=!b.classList.contains("on");b.classList.toggle("on",on);g("dt"+d).style.display=on?"block":"none"}
+function tgb(id){g("sb"+id).classList.toggle("on")}
+function tgSt(i,id){var s=S[i],k=s.bs.indexOf(id);if(k>=0){if(s.bs.length<2){toast("A student needs at least one batch");return}s.bs.splice(k,1)}else s.bs.push(id);s.mf=0;go()}
+function mig(){if(!cfg.bt||!cfg.bt.length)cfg.bt=[{id:1,name:cfg.batch||"Batch 1",fee:cfg.mf||3000,days:{}}];cfg.bt.forEach(function(b){if(!b.days)b.days={}});if(Array.isArray(mk))mk={};S.forEach(function(s){if(!s.id)s.id="s"+Math.random().toString(36).slice(2,8);if(!s.bs)s.bs=[s.b||cfg.bt[0].id];s.bs=s.bs.filter(function(x){return bt(x)});if(!s.bs.length)s.bs=[cfg.bt[0].id]});if(!cur||!bt(cur)){var t=new Date().getDay();cur=(cfg.bt.filter(function(b){return b.days[t]})[0]||cfg.bt[0]).id}}
+function setM(i,v){mk[S[i].id+"_"+cur]=v;saved=false;go()}
+function absMsg(i){return"Dear Parent, "+S[i].n+" was absent today ("+new Date().toLocaleDateString("en-IN",{day:"numeric",month:"short"})+") from "+(bt(cur)?bt(cur).name:"class")+" at "+cfg.name+". Please let us know the reason. Thank you."}
+function delB(id){if(cfg.bt.length<2){toast("Keep at least one batch");return}if(S.some(function(s){return s.bs.length==1&&s.bs[0]==id})){toast("Move or remove its students first");return}S.forEach(function(s){s.bs=s.bs.filter(function(x){return x!=id})});cfg.bt=cfg.bt.filter(function(b){return b.id!=id});go()}
+function delSt(i){S.splice(i,1);toast("Student removed");go()}
+function addSt(){var n=g("an").value.trim(),p=g("ap").value.replace(/\D/g,"").replace(/^0+/,""),f=+g("af").value||0,ids=cfg.bt.filter(function(b){var e=g("sb"+b.id);return e&&e.classList.contains("on")}).map(function(b){return b.id});if(p.length==10)p="91"+p;if(!n||p.length<12){toast("Enter name and 10-digit mobile number");return}if(!ids.length){toast("Tap at least one batch");return}var m=+g("am").value.replace(/\D/g,"")||0;S.push({id:"s"+Math.random().toString(36).slice(2,8),n:n,c:"",p:p,pend:f,late:f?1:0,att:100,bs:ids,mf:m,sc:[0,0,0,0,0,0]});toast(n+" added");go()}
+function saveBt(){var n=g("bnm").value.trim(),f=+g("bfe").value.replace(/\D/g,"")||0,days={};for(var d=0;d<7;d++){if(g("dd"+d).classList.contains("on"))days[d]=g("dt"+d).value.trim()||"-"}if(!n){toast("Enter batch name");return}var e=bt(eid);if(e){e.name=n;e.fee=f;e.days=days}else{var id=Date.now()%1000000000;cfg.bt.push({id:id,name:n,fee:f,days:days});cur=id}eid=0;toast("Batch saved");go()}
+function bcard(){var e=bt(eid)||{name:"",fee:"",days:{}},rows="";for(var d=0;d<7;d++){var on=e.days[d]!==undefined;rows+='<div style="display:flex;gap:8px;align-items:center;margin:4px 0"><button class="dbtn'+(on?' on':'')+'" style="width:64px;margin:0" id="dd'+d+'" onclick="tg('+d+')">'+DN[d]+'</button><input id="dt'+d+'" class="in" style="margin:0;flex:1;display:'+(on?'block':'none')+'" placeholder="Time, e.g. 5:30 PM" value="'+(on?String(e.days[d]).replace(/"/g,"&quot;"):'')+'"></div>'}return'<h3>Batches</h3><div class="card">'+cfg.bt.map(function(x){var n=S.filter(function(s){return inB(s,x.id)}).length;return'<div class="row"><div><b>'+x.name+'</b><div class="sub">'+sched(x)+' · '+inr(+x.fee||0)+'/month · '+n+' students</div></div><div><button class="ic" onclick="eid='+x.id+';go()">Edit</button> <button class="ic" onclick="delB('+x.id+')">Remove</button></div></div>'}).join("")+'</div><div class="card"><b>'+(eid?"Edit batch":"Add batch")+'</b><input id="bnm" class="in" placeholder="Batch name, e.g. Nutrition Group A" value="'+e.name.replace(/"/g,"&quot;")+'"><input id="bfe" class="in" type="text" inputmode="numeric" placeholder="Monthly fee for this batch" value="'+(e.fee||"")+'"><div class="sub" style="margin:8px 0 2px">Tap the days this batch runs, then type the time for each day</div>'+rows+'<button class="btn" onclick="saveBt()">'+(eid?"Save changes":"Add batch")+'</button>'+(eid?'<button class="btn ghost" onclick="eid=0;go()">Cancel</button>':'')+'</div>'}
+function stList(){return'<h3>Students</h3><div class="card">'+(S.length?S.map(function(s,i){return'<div style="padding:8px 0;border-bottom:1px solid var(--bd)"><div class="row" style="border:0;padding:0"><div><b>'+s.n+'</b><div class="sub">'+inr(sfee(s))+'/month</div></div><button class="ic" onclick="delSt('+i+')">Remove</button></div><div>'+cfg.bt.map(function(x){return'<button class="dbtn'+(inB(s,x.id)?' on':'')+'" onclick="tgSt('+i+','+x.id+')">'+x.name+'</button>'}).join("")+'</div></div>'}).join(""):'<div class="sub">No students yet</div>')+'</div>'}
+function att2(){var t=new Date().getDay(),b=bt(cur),idx=[];S.forEach(function(s,i){if(inB(s,cur))idx.push(i)});var K=function(i){return S[i].id+"_"+cur},ab=idx.filter(function(i){return mk[K(i)]=="A"}),d=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"short"}),o=cfg.bt.slice().sort(function(x,y){return(y.days[t]?1:0)-(x.days[t]?1:0)});return'<select onchange="cur=+this.value;saved=false;go()">'+o.map(function(x){return'<option value="'+x.id+'"'+(x.id==cur?" selected":"")+'>'+x.name+(x.days[t]?' · Today '+x.days[t]:'')+'</option>'}).join("")+'</select><div class="card"><b>'+b.name+'</b><div class="sub">'+d+' · '+(b.days[t]?'Today at '+b.days[t]:'Not scheduled today ('+sched(b)+')')+'</div><div class="sub" style="margin-top:4px">Present '+(idx.length-ab.length)+' · Absent '+ab.length+'</div></div><div class="card">'+(idx.length?idx.map(function(i){return'<div class="row"><div>'+S[i].n+'</div><div class="pa"><button class="p'+(mk[K(i)]!="A"?" on":"")+'" onclick="setM('+i+',\'P\')">P</button><button class="a'+(mk[K(i)]=="A"?" on":"")+'" onclick="setM('+i+',\'A\')">A</button></div></div>'}).join(""):'<div class="sub">No students in this batch yet. Add them in the Owner tab.</div>')+'</div><button class="btn" onclick="saveAtt2()">Save attendance</button>'+(saved?'<div class="card"><div class="sub">Absent today. Tap WhatsApp to inform the parent:</div>'+(ab.length?ab.map(function(i){return'<div class="row"><span>'+S[i].n+'</span><button class="ic" onclick="sheet('+i+',2)">WhatsApp</button></div>'}).join(""):'<div style="padding:6px 0">No absentees today 🎉</div>')+'</div>':'')}
+function setLogo(i){var f=i.files&&i.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var c=document.createElement("canvas");c.width=c.height=96;var x=c.getContext("2d"),s=Math.min(im.width,im.height);x.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,96,96);cfg.logo=c.toDataURL("image/jpeg",0.8);toast("Logo saved");go()};im.src=r.result};r.readAsDataURL(f)}
+function rmLogo(){cfg.logo="";go()}
+var H=H||{},HWL=HWL||[],PL=PL||[],es=-1;
+function ymd(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
+function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
+function pct(s){var p=0,t=0;Object.keys(H).forEach(function(dt){Object.keys(H[dt]).forEach(function(k){if(k.indexOf(s.id+"_")==0){t++;if(H[dt][k]=="P")p++}})});return t?Math.round(p/t*100):null}
+function saveAtt2(){var dt=ymd();H[dt]=H[dt]||{};S.forEach(function(s){if(inB(s,cur))H[dt][s.id+"_"+cur]=(mk[s.id+"_"+cur]=="A"?"A":"P")});var ks=Object.keys(H).sort();while(ks.length>90)delete H[ks.shift()];saved=true;toast("Attendance saved");go()}
+function addHw(){var t=g("hwt").value.trim();if(!t){toast("Write the homework first");return}HWL.unshift({b:cur,t:t,d:new Date().toLocaleDateString("en-IN",{day:"numeric",month:"short"})});HWL=HWL.slice(0,100);go()}
+function delHw(k){HWL.splice(k,1);go()}
+function clearDue(i){var s=S[i];if(!confirm("Remove the pending fee for "+s.n+"? This will not be counted as a payment."))return;s.pend=0;s.late=0;toast("Pending fee removed for "+s.n);go()}
+function clearPL(){if(!confirm("Delete all payment history? Collected amounts will become zero."))return;PL=[];toast("Payment history cleared");go()}
+function recPay(){var v=+g("fa").value.replace(/\D/g,""),s=S[sel];if(!s||!v){toast("Enter the amount received");return}if(!s.pend){toast("No fee due for this student");return}var a=Math.min(v,s.pend);s.pend-=a;if(!s.pend)s.late=0;PL.unshift({n:s.n,a:a,d:ymd()});PL=PL.slice(0,300);toast(inr(a)+" recorded for "+s.n);go()}
+function paid(i){var s=S[i];if(s.pend>0){PL.unshift({n:s.n,a:s.pend,d:ymd()});PL=PL.slice(0,300)}s.pend=0;s.late=0;toast(s.n+" marked paid");go()}
+function saveEs(i){var n=g("esn").value.trim(),p=g("esp").value.replace(/\D/g,"").replace(/^0+/,"");if(p.length==10)p="91"+p;if(!n||p.length<12){toast("Enter name and 10-digit mobile number");return}S[i].n=n;S[i].p=p;es=-1;toast("Student updated");go()}
+function snap(){return JSON.stringify({S:S,mk:mk,cfg:cfg,EQ:EQ,H:H,HW2:HWL,PL:PL})}
+function bkCopy(){var e=document.createElement("textarea");e.value=snap();e.style.position="fixed";e.style.opacity="0";document.body.appendChild(e);e.focus();e.select();var ok=false;try{ok=document.execCommand("copy")}catch(x){}document.body.removeChild(e);toast(ok?"Backup copied. Paste it somewhere safe":"Could not copy")}
+function bkRestore(){try{var o=JSON.parse(g("bk").value);if(!Array.isArray(o.S))throw 0;S=o.S;cfg=o.cfg||cfg;mk=o.mk||{};EQ=o.EQ||[];H=o.H||{};HWL=o.HW2||[];PL=o.PL||[];toast("Backup restored");go()}catch(e){toast("That backup text is not valid")}}
+function backup(){return'<h3>Backup</h3><div class="card"><div class="sub">Copy all your data and keep it safe, for example in a WhatsApp chat with yourself.</div><button class="btn ghost" onclick="bkCopy()">Copy backup</button><textarea id="bk" class="in" style="height:80px" placeholder="Paste a backup here to restore"></textarea><button class="btn ghost" onclick="bkRestore()">Restore from pasted backup</button><button class="btn ghost" onclick="clearPL()">Clear payment history</button><div class="sub" style="margin-top:12px"><a href="privacy.html" style="color:var(--pri)">Privacy Policy</a></div></div>'}
+function parent(){var s=S[sel],pc=pct(s),hw=HWL.filter(function(h){return s.bs.indexOf(h.b)>=0}).slice(0,5);return picker()+'<div class="card"><div class="sub">Attendance</div>'+(pc===null?'<div class="sub" style="margin-top:6px">No classes recorded yet</div>':'<div class="big">'+pc+'%</div><div class="bar"><i style="width:'+pc+'%"></i></div>')+'</div><h3>Homework</h3><div class="card">'+(hw.length?hw.map(function(h){return'<div class="row"><div>'+esc(h.t)+'<div class="sub">'+(bt(h.b)?esc(bt(h.b).name):"")+' · '+h.d+'</div></div></div>'}).join(""):'<div class="sub">No homework added</div>')+'</div><h3>Fee</h3><div class="card">'+(s.pend?'<div class="sub">Fee due</div><div class="big">'+inr(s.pend)+'</div><div class="sub">'+(s.late?s.late+' days overdue':'Due now')+'</div><button class="btn" onclick="upi()">Pay by UPI</button>':'<span class="chip g">All fees paid ✓</span>')+'</div>'}
+function stList(){return'<h3>Students</h3><div class="card">'+(S.length?S.map(function(s,i){return'<div style="padding:8px 0;border-bottom:1px solid var(--bd)"><div class="row" style="border:0;padding:0"><div><b>'+esc(s.n)+'</b><div class="sub">+'+s.p+' · '+inr(sfee(s))+'/month</div></div><div><button class="ic" onclick="es='+(es==i?-1:i)+';go()">'+(es==i?"Close":"Edit")+'</button> <button class="ic" onclick="delSt('+i+')">Remove</button></div></div>'+(es==i?'<input id="esn" class="in" value="'+esc(s.n)+'" placeholder="Student name"><input id="esp" class="in" inputmode="numeric" value="'+s.p.slice(2)+'" placeholder="10-digit mobile number"><button class="btn" onclick="saveEs('+i+')">Save</button>':'')+'<div>'+cfg.bt.map(function(x){return'<button class="dbtn'+(inB(s,x.id)?' on':'')+'" onclick="tgSt('+i+','+x.id+')">'+esc(x.name)+'</button>'}).join("")+'</div></div>'}).join(""):'<div class="sub">No students yet</div>')+'</div>'}
+function owner(){var mo=ymd().slice(0,7),c=PL.filter(function(x){return x.d.slice(0,7)==mo}).reduce(function(a,x){return a+x.a},0),p=S.reduce(function(a,s){return a+s.pend},0),pc=Math.round(c/((c+p)||1)*100),mn=new Date().toLocaleDateString("en-IN",{month:"long"});return'<div class="card"><div class="sub">'+mn+' fees</div><div class="row" style="border:0"><div><div class="sub">Collected</div><div class="big" style="color:var(--grn)">'+inr(c)+'</div></div><div style="text-align:right"><div class="sub">Pending</div><div class="big" style="color:var(--red)">'+inr(p)+'</div></div></div><div class="bar"><i style="width:'+pc+'%"></i></div><div class="sub" style="margin-top:4px">'+pc+'% collected</div></div><div class="grid"><div class="card"><div class="sub">Students</div><div class="big">'+S.length+'</div></div><div class="card"><div class="sub">New enquiries</div><div class="big">'+EQ.length+'</div></div></div><h3>Recent payments</h3><div class="card">'+(PL.length?PL.slice(0,5).map(function(x){return'<div class="row"><div><b>'+esc(x.n)+'</b><div class="sub">'+x.d+'</div></div><b>'+inr(x.a)+'</b></div>'}).join(""):'<div class="sub">No payments recorded yet</div>')+'</div><h3>New referral enquiries</h3><div class="card">'+EQ.map(function(e,k){return'<div class="row"><div><b>'+esc(e[0])+'</b><div class="sub">'+esc(e[1])+" · "+esc(e[2])+'</div></div><button class="ic" onclick="delEq('+k+')">Remove</button></div>'}).join("")+(EQ.length?"":'<div class="sub" style="padding:8px 0">No enquiries yet</div>')+'</div>'+eqForm()+bcard()+stList()+setup()+backup()}
+function att2(){var t=new Date().getDay(),b=bt(cur),idx=[];S.forEach(function(s,i){if(inB(s,cur))idx.push(i)});var K=function(i){return S[i].id+"_"+cur},ab=idx.filter(function(i){return mk[K(i)]=="A"}),d=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"short"}),o=cfg.bt.slice().sort(function(x,y){return(y.days[t]?1:0)-(x.days[t]?1:0)});return'<select onchange="cur=+this.value;saved=false;go()">'+o.map(function(x){return'<option value="'+x.id+'"'+(x.id==cur?" selected":"")+'>'+esc(x.name)+(x.days[t]?' · Today '+x.days[t]:'')+'</option>'}).join("")+'</select><div class="card"><b>'+esc(b.name)+'</b><div class="sub">'+d+' · '+(b.days[t]?'Today at '+b.days[t]:'Not scheduled today ('+sched(b)+')')+'</div><div class="sub" style="margin-top:4px">Present '+(idx.length-ab.length)+' · Absent '+ab.length+'</div></div><div class="card">'+(idx.length?idx.map(function(i){return'<div class="row"><div>'+esc(S[i].n)+'</div><div class="pa"><button class="p'+(mk[K(i)]!="A"?" on":"")+'" onclick="setM('+i+',\'P\')">P</button><button class="a'+(mk[K(i)]=="A"?" on":"")+'" onclick="setM('+i+',\'A\')">A</button></div></div>'}).join(""):'<div class="sub">No students in this batch yet. Add them in the Owner tab.</div>')+'</div><button class="btn" onclick="saveAtt2()">Save attendance</button>'+(saved?'<div class="card"><div class="sub">Absent today. Tap WhatsApp to inform the parent:</div>'+(ab.length?ab.map(function(i){return'<div class="row"><span>'+esc(S[i].n)+'</span><button class="ic" onclick="sheet('+i+',2)">WhatsApp</button></div>'}).join(""):'<div style="padding:6px 0">No absentees today 🎉</div>')+'</div>':'')+'<h3>Homework for this batch</h3><div class="card"><input id="hwt" class="in" placeholder="e.g. Chapter 4, questions 1 to 6"><button class="btn" onclick="addHw()">Add homework</button>'+HWL.map(function(h,k){return h.b==cur?'<div class="row"><div>'+esc(h.t)+'<div class="sub">'+h.d+'</div></div><button class="ic" onclick="delHw('+k+')">Remove</button></div>':''}).join("")+'</div>'}
+/* ===== v2 add-ons: language, summary, receipt, colours, avatars ===== */
+var LN={en:"English",bn:"বাংলা",hi:"हिन्दी"};
+var THEMES=[{k:"green",n:"Green",l:"#0f766e",d:"#2dd4bf"},{k:"blue",n:"Blue",l:"#1d4ed8",d:"#60a5fa"},{k:"orange",n:"Orange",l:"#c2410c",d:"#fb923c"},{k:"purple",n:"Purple",l:"#7e22ce",d:"#c084fc"}];
+function LG(){return cfg.lang==="bn"||cfg.lang==="hi"?cfg.lang:"en"}
+function t3(e,b,h){var l=LG();return l==="bn"?b:l==="hi"?h:e}
+var TR={bn:{},hi:{}};
+(function(){
+var D=[
+["Fees","ফি","फ़ीस"],["Attendance","উপস্থিতি","उपस्थिति"],["Parent","অভিভাবক","अभिभावक"],["Owner","মালিক","संचालक"],
+["Total pending","মোট বাকি","कुल बाकी"],["Set fee due","ফি বাকি সেট করুন","बाकी फ़ीस सेट करें"],
+["Add students in the Owner tab first.","আগে Owner ট্যাবে ছাত্রছাত্রী যোগ করুন।","पहले Owner टैब में छात्र जोड़ें।"],
+["Record payment received (uses amount above)","পেমেন্ট পাওয়া গেছে লিখুন (ওপরের টাকা ধরে)","भुगतान मिला दर्ज करें (ऊपर की राशि से)"],
+["Paid ✓","জমা ✓","जमा ✓"],["Remove due","বাকি মুছুন","बाकी हटाएँ"],
+["No pending fees 🎉","কোনো ফি বাকি নেই 🎉","कोई फ़ीस बाकी नहीं 🎉"],["Due now","এখনই বাকি","अभी बाकी"],
+["Fee due","বাকি ফি","बाकी फ़ीस"],["Pay by UPI","UPI-তে পেমেন্ট করুন","UPI से भुगतान करें"],
+["All fees paid ✓","সব ফি জমা ✓","सारी फ़ीस जमा ✓"],["Fee","ফি","फ़ीस"],
+["Homework","হোমওয়ার্ক","होमवर्क"],["Homework for this batch","এই ব্যাচের হোমওয়ার্ক","इस बैच का होमवर्क"],
+["No homework added","কোনো হোমওয়ার্ক নেই","कोई होमवर्क नहीं"],["Add homework","হোমওয়ার্ক যোগ করুন","होमवर्क जोड़ें"],
+["Attendance this month","এই মাসের উপস্থিতি","इस महीने की उपस्थिति"],
+["No classes recorded yet","এখনও কোনো ক্লাস লেখা হয়নি","अभी कोई कक्षा दर्ज नहीं"],
+["Save attendance","উপস্থিতি সেভ করুন","उपस्थिति सेव करें"],
+["Save & send absent alerts","সেভ করে অনুপস্থিতির বার্তা পাঠান","सेव करके अनुपस्थिति संदेश भेजें"],
+["Absent today. Tap WhatsApp to inform the parent:","আজ যারা অনুপস্থিত। অভিভাবককে জানাতে WhatsApp চাপুন:","आज अनुपस्थित हैं। अभिभावक को बताने के लिए WhatsApp दबाएँ:"],
+["No absentees today 🎉","আজ কেউ অনুপস্থিত নয় 🎉","आज कोई अनुपस्थित नहीं 🎉"],
+["No students in this batch yet. Add them in the Owner tab.","এই ব্যাচে এখনও ছাত্রছাত্রী নেই। Owner ট্যাবে যোগ করুন।","इस बैच में अभी कोई छात्र नहीं। Owner टैब में जोड़ें।"],
+["Sent ✓","পাঠানো হয়েছে ✓","भेज दिया ✓"],["Alerts sent:","বার্তা পাঠানো:","संदेश भेजे:"],
+["Collected","আদায়","वसूल"],["Pending","বাকি","बाकी"],["Students","ছাত্রছাত্রী","छात्र"],
+["New enquiries","নতুন অনুসন্ধান","नई पूछताछ"],["Recent payments","সাম্প্রতিক পেমেন্ট","हाल के भुगतान"],
+["No payments recorded yet","এখনও কোনো পেমেন্ট নেই","अभी कोई भुगतान नहीं"],
+["New referral enquiries","নতুন রেফারেল অনুসন্ধান","नई रेफ़रल पूछताछ"],["No enquiries yet","এখনও কোনো অনুসন্ধান নেই","अभी कोई पूछताछ नहीं"],
+["Other enquiry","অন্য অনুসন্ধান","अन्य पूछताछ"],
+["Remove","মুছুন","हटाएँ"],["Edit","এডিট","बदलें"],["Close","বন্ধ করুন","बंद करें"],["Save","সেভ","सेव"],["Add","যোগ করুন","जोड़ें"],["Cancel","বাতিল","रद्द करें"],
+["Add enquiry","অনুসন্ধান যোগ করুন","पूछताछ जोड़ें"],["Add student","ছাত্রছাত্রী যোগ করুন","छात्र जोड़ें"],
+["Batches","ব্যাচ","बैच"],["Add batch","ব্যাচ যোগ করুন","बैच जोड़ें"],["Save batch","ব্যাচ সেভ করুন","बैच सेव करें"],["Edit batch","ব্যাচ এডিট","बैच बदलें"],
+["Save changes","পরিবর্তন সেভ করুন","बदलाव सेव करें"],
+["Centre logo","কেন্দ্রের লোগো","केंद्र का लोगो"],["Remove logo","লোগো সরান","लोगो हटाएँ"],
+["Centre settings","কেন্দ্রের সেটিংস","केंद्र की सेटिंग"],["Save settings","সেটিংস সেভ করুন","सेटिंग सेव करें"],
+["Backup","ব্যাকআপ","बैकअप"],["Copy backup","ব্যাকআপ কপি করুন","बैकअप कॉपी करें"],
+["Restore from pasted backup","পেস্ট করা ব্যাকআপ থেকে ফিরিয়ে আনুন","पेस्ट किए बैकअप से वापस लाएँ"],
+["Clear payment history","পেমেন্টের ইতিহাস মুছুন","भुगतान का इतिहास मिटाएँ"],
+["Remove all students (start fresh)","সব ছাত্রছাত্রী মুছুন (নতুন করে শুরু)","सभी छात्र हटाएँ (नए सिरे से शुरू)"],
+["Privacy Policy","প্রাইভেসি পলিসি","प्राइवेसी पॉलिसी"],
+["Open WhatsApp","WhatsApp খুলুন","WhatsApp खोलें"],["Copy message","বার্তা কপি করুন","संदेश कॉपी करें"],["Copy number","নম্বর কপি করুন","नंबर कॉपी करें"],
+["Tap the batches this student attends","ছাত্রটি যে ব্যাচে পড়ে সেগুলোতে চাপুন","छात्र जिन बैचों में पढ़ता है उन पर दबाएँ"],
+["Tap the days this batch runs, then type the time for each day","ব্যাচ যে দিনগুলোতে চলে সেগুলোতে চাপুন, তারপর প্রতিদিনের সময় লিখুন","बैच जिन दिनों चलता है उन पर दबाएँ, फिर हर दिन का समय लिखें"],
+["No students yet","এখনও কোনো ছাত্রছাত্রী নেই","अभी कोई छात्र नहीं"],
+/* placeholders */
+["Fee due in rupees, e.g. 1500","বাকি ফি টাকায়, যেমন 1500","बाकी फ़ीस रुपये में, जैसे 1500"],
+["Days late (optional)","কত দিন দেরি (ঐচ্ছিক)","कितने दिन की देरी (वैकल्पिक)"],
+["Student name","ছাত্রছাত্রীর নাম","छात्र का नाम"],
+["Parent WhatsApp number (10 digits)","অভিভাবকের WhatsApp নম্বর (১০ সংখ্যা)","अभिभावक का WhatsApp नंबर (10 अंक)"],
+["10-digit mobile number","১০ সংখ্যার মোবাইল নম্বর","10 अंकों का मोबाइल नंबर"],
+["Monthly fee (leave blank to use batch fee)","মাসিক ফি (ফাঁকা রাখলে ব্যাচের ফি)","मासिक फ़ीस (खाली छोड़ें तो बैच की फ़ीस)"],
+["Monthly fee for this batch","এই ব্যাচের মাসিক ফি","इस बैच की मासिक फ़ीस"],
+["Time, e.g. 5:30 PM","সময়, যেমন 5:30 PM","समय, जैसे 5:30 PM"],
+["Centre name","কেন্দ্রের নাম","केंद्र का नाम"],["App name shown at top","ওপরে দেখানো অ্যাপের নাম","ऊपर दिखने वाला ऐप का नाम"],
+["Default monthly fee per student","প্রতি ছাত্রের ডিফল্ট মাসিক ফি","प्रति छात्र डिफ़ॉल्ट मासिक फ़ीस"],
+["UPI ID for fees","ফি-এর জন্য UPI ID","फ़ीस के लिए UPI ID"],
+["Paste a backup here to restore","ফিরিয়ে আনতে এখানে ব্যাকআপ পেস্ট করুন","वापस लाने के लिए यहाँ बैकअप पेस्ट करें"],
+["Referred by (optional)","কে রেফার করেছেন (ঐচ্ছিক)","किसने रेफ़र किया (वैकल्पिक)"],
+["Class, e.g. Class 8","ক্লাস, যেমন Class 8","कक्षा, जैसे Class 8"],
+["e.g. Chapter 4, questions 1 to 6","যেমন Chapter 4, প্রশ্ন 1 থেকে 6","जैसे Chapter 4, प्रश्न 1 से 6"],
+["Pending fee in rupees, 0 if paid","বাকি ফি টাকায়, জমা হলে 0","बाकी फ़ीस रुपये में, जमा हो तो 0"],
+/* toasts */
+["Attendance saved","উপস্থিতি সেভ হয়েছে","उपस्थिति सेव हो गई"],
+["Attendance saved. No absentees","উপস্থিতি সেভ হয়েছে। কেউ অনুপস্থিত নয়","उपस्थिति सेव हुई। कोई अनुपस्थित नहीं"],
+["Settings saved","সেটিংস সেভ হয়েছে","सेटिंग सेव हो गई"],["Student removed","ছাত্রছাত্রী মোছা হয়েছে","छात्र हटा दिया"],
+["Student updated","ছাত্রছাত্রীর তথ্য বদলেছে","छात्र की जानकारी बदली"],["Batch saved","ব্যাচ সেভ হয়েছে","बैच सेव हो गया"],
+["Enquiry added","অনুসন্ধান যোগ হয়েছে","पूछताछ जुड़ गई"],["Logo saved","লোগো সেভ হয়েছে","लोगो सेव हो गया"],
+["Score added","স্কোর যোগ হয়েছে","स्कोर जुड़ गया"],
+["Backup copied. Paste it somewhere safe","ব্যাকআপ কপি হয়েছে। নিরাপদ জায়গায় পেস্ট করে রাখুন","बैकअप कॉपी हो गया। इसे सुरक्षित जगह पेस्ट करके रखें"],
+["Backup restored","ব্যাকআপ ফিরে এসেছে","बैकअप वापस आ गया"],
+["That backup text is not valid","এই ব্যাকআপ লেখাটি ঠিক নয়","यह बैकअप टेक्स्ट सही नहीं है"],
+["Payment history cleared","পেমেন্টের ইতিহাস মুছে গেছে","भुगतान का इतिहास मिट गया"],
+["All students removed","সব ছাত্রছাত্রী মোছা হয়েছে","सभी छात्र हटा दिए"],
+["Enter the fee amount","ফির টাকার অঙ্ক লিখুন","फ़ीस की राशि लिखें"],
+["Enter the amount received","প্রাপ্ত টাকার অঙ্ক লিখুন","मिली हुई राशि लिखें"],
+["Enter the student name","ছাত্রছাত্রীর নাম লিখুন","छात्र का नाम लिखें"],
+["Enter name and 10-digit mobile number","নাম ও ১০ সংখ্যার মোবাইল নম্বর লিখুন","नाम और 10 अंकों का मोबाइल नंबर लिखें"],
+["Enter batch name","ব্যাচের নাম লিখুন","बैच का नाम लिखें"],
+["No fee due for this student","এই ছাত্রছাত্রীর কোনো ফি বাকি নেই","इस छात्र की कोई फ़ीस बाकी नहीं"],
+["Add your UPI ID in the Owner tab first","আগে Owner ট্যাবে আপনার UPI ID দিন","पहले Owner टैब में अपना UPI ID डालें"],
+["Write the homework first","আগে হোমওয়ার্ক লিখুন","पहले होमवर्क लिखें"],
+["Tap at least one batch","অন্তত একটি ব্যাচে চাপুন","कम से कम एक बैच चुनें"],
+["A student needs at least one batch","প্রতিটি ছাত্রের অন্তত একটি ব্যাচ লাগবে","हर छात्र का कम से कम एक बैच होना चाहिए"],
+["Keep at least one batch","অন্তত একটি ব্যাচ রাখুন","कम से कम एक बैच रखें"],
+["Move or remove its students first","আগে এর ছাত্রছাত্রীদের সরান","पहले इसके छात्रों को हटाएँ"],
+["Remove its students first","আগে এর ছাত্রছাত্রীদের সরান","पहले इसके छात्रों को हटाएँ"],
+["Copied. Now paste it in WhatsApp","কপি হয়েছে। এবার WhatsApp-এ পেস্ট করুন","कॉपी हो गया। अब WhatsApp में पेस्ट करें"],
+["Number copied","নম্বর কপি হয়েছে","नंबर कॉपी हो गया"],["Could not copy","কপি করা গেল না","कॉपी नहीं हो सका"],
+["Press and hold the text, then tap Copy","লেখায় চেপে ধরে থাকুন, তারপর Copy চাপুন","टेक्स्ट को दबाकर रखें, फिर Copy दबाएँ"],
+["Tap WhatsApp next to each parent to send","পাঠাতে প্রতিটি অভিভাবকের পাশে WhatsApp চাপুন","भेजने के लिए हर अभिभावक के आगे WhatsApp दबाएँ"]
+];
+D.forEach(function(r){TR.bn[r[0]]=r[1];TR.hi[r[0]]=r[2]});
+})();
+var RULES=[
+[/^(\d+) students$/,"$1 জন ছাত্রছাত্রী","$1 छात्र"],
+[/^(\d+) days late$/,"$1 দিন দেরি","$1 दिन की देरी"],
+[/^(\d+) days overdue$/,"$1 দিন বাকি","$1 दिन से बाकी"],
+[/^(\d+)% collected$/,"$1% আদায়","$1% वसूल"],
+[/^Present (\d+) · Absent (\d+)$/,"উপস্থিত $1 · অনুপস্থিত $2","उपस्थित $1 · अनुपस्थित $2"],
+[/^(.*) fees$/,"$1 মাসের ফি","$1 की फ़ीस"],
+[/^Send to (.*)’s parent$/,"$1-এর অভিভাবককে পাঠান","$1 के अभिभावक को भेजें"],
+[/^Batch name, e\.g\. (.*)$/,"ব্যাচের নাম, যেমন $1","बैच का नाम, जैसे $1"]
+];
+var SUBS=[
+["Today at ","আজ ","आज "],[" · Today "," · আজ "," · आज "],["Not scheduled today","আজ ক্লাস নেই","आज कक्षा नहीं"],
+["/month","/মাস","/माह"],[" pending"," বাকি"," बाकी"],["Referred by ","রেফার করেছেন: ","रेफ़र किया: "],
+["Fee due set for ","ফি বাকি সেট হয়েছে: ","बाकी फ़ीस सेट हुई: "],["Pending fee removed for ","বাকি ফি মোছা হয়েছে: ","बाकी फ़ीस हटाई: "],
+[" marked paid"," — ফি জমা হয়েছে"," — फ़ीस जमा हुई"],["Absent alert sent to ","অনুপস্থিতির বার্তা পাঠানো হয়েছে: ","अनुपस्थिति संदेश भेजा: "],
+["WhatsApp number: ","WhatsApp নম্বর: ","WhatsApp नंबर: "],
+["Remove the pending fee for ","বাকি ফি মুছবেন: ","बाकी फ़ीस हटाएँ: "],
+["? This will not be counted as a payment.","? এটি পেমেন্ট হিসেবে গণ্য হবে না।","? इसे भुगतान नहीं गिना जाएगा।"],
+["Delete all payment history? Collected amounts will become zero.","সব পেমেন্টের ইতিহাস মুছবেন? আদায়ের অঙ্ক শূন্য হয়ে যাবে।","सारा भुगतान इतिहास मिटाएँ? वसूल राशि शून्य हो जाएगी।"],
+["Remove ALL students and their data? This cannot be undone.","সব ছাত্রছাত্রী ও তাদের তথ্য মুছবেন? এটি ফেরানো যাবে না।","सभी छात्र और उनका डेटा हटाएँ? इसे वापस नहीं किया जा सकता।"]
+];
+function trS(k){var l=LG();if(l==="en"||typeof k!=="string")return k;var d=TR[l],i=l==="bn"?1:2;if(d[k])return d[k];
+for(var a=0;a<RULES.length;a++){var m=RULES[a][0];if(m.test(k))return k.replace(m,RULES[a][i])}
+var o=k;SUBS.forEach(function(s){if(o.indexOf(s[0])>=0)o=o.split(s[0]).join(s[i])});return o}
+function trNode(root){if(!root||LG()==="en")return;var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),n,L=[];while(n=w.nextNode())L.push(n);
+L.forEach(function(n){var p=n.parentNode?n.parentNode.nodeName:"";if(p==="TEXTAREA"||p==="SCRIPT"||p==="STYLE")return;var t=n.nodeValue,k=t.trim();if(!k)return;var r=trS(k);if(r!==k)n.nodeValue=t.replace(k,function(){return r})});
+var ph=root.querySelectorAll("[placeholder]");for(var i=0;i<ph.length;i++){var v=ph[i].getAttribute("placeholder"),r2=trS(v);if(r2!==v)ph[i].setAttribute("placeholder",r2)}}
+/* dates follow the chosen language */
+(function(){var o=Date.prototype.toLocaleDateString;Date.prototype.toLocaleDateString=function(l,p){if(l==="en-IN"){var g=LG();l=g==="bn"?"bn-IN":g==="hi"?"hi-IN":"en-IN"}return o.call(this,l,p)}})();
+/* parent messages in the chosen language */
+function msgFee(s){var u=(cfg.upi||"").trim(),l=LG(),nm=cfg.name,a=inr(s.pend);
+if(l==="bn")return"প্রিয় অভিভাবক, "+nm+"-এ "+s.n+"-এর "+a+" ফি বাকি আছে"+(s.late>0?" ("+s.late+" দিন দেরি)":"")+"।"+(u?" UPI-তে পেমেন্ট করুন: "+u+"।":"")+" অনুগ্রহ করে দ্রুত জমা দিন। ধন্যবাদ।";
+if(l==="hi")return"प्रिय अभिभावक, "+nm+" में "+s.n+" की "+a+" फ़ीस बाकी है"+(s.late>0?" ("+s.late+" दिन की देरी)":"")+"।"+(u?" UPI से भुगतान करें: "+u+"।":"")+" कृपया जल्द जमा करें। धन्यवाद।";
+return"Dear Parent, fee of "+a+" for "+s.n+" is pending"+(s.late>0?" for "+s.late+" days":"")+" at "+nm+"."+(u?" You can pay by UPI to "+u+".":"")+" Kindly pay at the earliest. Thank you."}
+function absMsg(i){var s=S[i],l=LG(),d=new Date().toLocaleDateString("en-IN",{day:"numeric",month:"short"}),b=bt(cur)?bt(cur).name:"class",nm=cfg.name;
+if(l==="bn")return"প্রিয় অভিভাবক, "+s.n+" আজ ("+d+") "+nm+"-এ "+b+" ক্লাসে অনুপস্থিত ছিল। অনুগ্রহ করে কারণ জানান। ধন্যবাদ।";
+if(l==="hi")return"प्रिय अभिभावक, "+nm+" में आज ("+d+") "+b+" कक्षा में "+s.n+" की अनुपस्थिति दर्ज हुई। कृपया कारण बताएँ। धन्यवाद।";
+return"Dear Parent, "+s.n+" was absent today ("+d+") from "+b+" at "+nm+". Please let us know the reason. Thank you."}
+var RCA=0;
+function rcptMsg(i){var s=S[i],l=LG(),a=inr(RCA),r=s.pend,nm=cfg.name,d=new Date().toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});
+if(l==="bn")return"প্রিয় অভিভাবক, "+nm+"-এ "+s.n+"-এর জন্য "+d+" তারিখে "+a+" পেয়েছি।"+(r>0?" বাকি: "+inr(r)+"।":" এখন সব ফি জমা।")+" ধন্যবাদ।";
+if(l==="hi")return"प्रिय अभिभावक, "+nm+" में "+s.n+" के लिए "+d+" को "+a+" प्राप्त हुए।"+(r>0?" बाकी: "+inr(r)+"।":" अब सारी फ़ीस जमा है।")+" धन्यवाद।";
+return"Dear Parent, we have received "+a+" for "+s.n+" at "+nm+" on "+d+"."+(r>0?" Remaining: "+inr(r)+".":" All fees are now paid.")+" Thank you."}
+/* receipt after a payment */
+(function(){var _paid=paid,_rp=recPay,_sheet=sheet;
+paid=function(i){var a=S[i]?S[i].pend:0;_paid(i);if(a>0){RCA=a;sheet(i,3)}};
+recPay=function(){var f=PL[0],i=sel;_rp();if(PL[0]!==f&&PL[0]){RCA=PL[0].a;sheet(i,3)}};
+sheet=function(i,k){if(k===3){var o=msgFee;msgFee=function(){return rcptMsg(i)};try{_sheet(i,0)}finally{msgFee=o}}else _sheet(i,k);trNode(g("sh"));
+if(k===3){var h=g("sh").querySelector("b");if(h)h.textContent=t3("Payment received – send receipt to ","পেমেন্ট পাওয়া গেছে – রসিদ পাঠান: ","भुगतान मिला – रसीद भेजें: ")+S[i].n}}
+})();
+/* toast + confirm follow the language */
+(function(){var _t=toast;toast=function(t){_t(trS(t))};var _c=window.confirm.bind(window);window.confirm=function(m){return _c(trS(m))}})();
+/* summary card on Fees tab */
+function sbox(v,l){return'<div><div style="font-size:20px;font-weight:700">'+v+'</div><div style="font-size:11px;opacity:.85">'+l+'</div></div>'}
+function summary(){var h=new Date().getHours(),g1=h<12?t3("Good morning","শুভ সকাল","शुभ प्रभात"):h<17?t3("Good afternoon","শুভ অপরাহ্ন","नमस्कार"):t3("Good evening","শুভ সন্ধ্যা","शुभ संध्या"),
+ab=0,k;for(k in mk){if(mk[k]==="A")ab++}
+var mo=ymd().slice(0,7),c=PL.filter(function(x){return x.d.slice(0,7)==mo}).reduce(function(a,x){return a+x.a},0),
+d=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"});
+return'<div class="card" style="background:var(--pri);color:var(--prit);border:0"><div style="font-size:18px;font-weight:700">'+g1+' 👋</div><div style="opacity:.85;font-size:13px;margin-top:2px">'+d+'</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;text-align:center">'+sbox(S.length,t3("Students","ছাত্রছাত্রী","छात्र"))+sbox(inr(c),t3("Collected this month","এ মাসে আদায়","इस माह वसूल"))+sbox(ab,t3("Absent today","আজ অনুপস্থিত","आज अनुपस्थित"))+'</div></div>'}
+/* language + colour card on Owner tab */
+function setLang(k){cfg.lang=k;go()}
+function setTheme(k){cfg.theme=k;go()}
+function prefs(){var l=LG(),th=cfg.theme||"green";
+return'<h3>'+t3("Language & colour","ভাষা ও রঙ","भाषा और रंग")+'</h3><div class="card"><div class="sub" style="margin-bottom:6px">'+t3("Language","ভাষা","भाषा")+'</div><div>'+["en","bn","hi"].map(function(k){return'<button class="dbtn'+(l===k?" on":"")+'" onclick="setLang(\''+k+'\')">'+LN[k]+'</button>'}).join("")+'</div><div class="sub" style="margin:12px 0 6px">'+t3("App colour","অ্যাপের রঙ","ऐप का रंग")+'</div><div>'+THEMES.map(function(x){return'<button onclick="setTheme(\''+x.k+'\')" aria-label="'+x.n+'" style="width:38px;height:38px;border-radius:50%;border:3px solid '+(th===x.k?"var(--tx)":"transparent")+';background:'+x.l+';margin:0 10px 6px 0"></button>'}).join("")+'</div></div>'}
+(function(){var _f=fees,_o=owner;fees=function(){return summary()+_f()};owner=function(){return prefs()+_o()}})();
+/* colour theme */
+function applyTheme(){var T=THEMES.filter(function(x){return x.k===(cfg.theme||"green")})[0]||THEMES[0],e=document.documentElement,at=e.getAttribute("data-theme"),dk=at==="dark"||(at!=="light"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches),r=e.style;
+r.setProperty("--pri",dk?T.d:T.l);r.setProperty("--prit",dk?"#07120f":"#fff");var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",T.l)}
+/* round initials beside names */
+var AVC=["#0f766e","#1d4ed8","#c2410c","#7e22ce","#be185d","#4d7c0f","#b45309","#0369a1"];
+function avatars(root){if(!root)return;var rows=root.querySelectorAll(".row");for(var i=0;i<rows.length;i++){var r=rows[i],f=r.firstElementChild;if(!f||f.tagName!=="DIV")continue;var nm=null,b=null,c;
+for(c=f.firstElementChild;c;c=c.nextElementSibling){if(c.tagName==="B"){b=c;break}}
+if(b)nm=b.textContent;else if(!f.children.length&&r.querySelector(".pa"))nm=f.textContent;
+if(!nm||!nm.trim())continue;nm=nm.trim();var h=0;for(var j=0;j<nm.length;j++)h+=nm.charCodeAt(j);
+var av=document.createElement("span");av.className="av";av.style.background=AVC[h%AVC.length];av.textContent=Array.from(nm)[0].toUpperCase();
+var w=document.createElement("div");w.style.cssText="display:flex;align-items:center;gap:10px;min-width:0";r.replaceChild(w,f);w.appendChild(av);w.appendChild(f)}}
+function post(){try{applyTheme();trNode(g("m"));trNode(g("n"));avatars(g("m"))}catch(e){}}
+(function(){var _g=go;go=function(){_g();post()}})();
+
+go();initDb();
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+</script></body></html>
